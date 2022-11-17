@@ -1,0 +1,76 @@
+Private Sub CommandButton1_Click()
+
+Dim k1, k2 As Workbook
+Dim s1, s2 As Worksheet
+Dim dosya As Variant
+
+
+Set k1 = ThisWorkbook
+Set s1 = k1.Sheets(1)
+
+
+dosya = Application.GetOpenFilename(filefilter:="Excel Files(*.xls;*.xlsx;*.xlsm;*.xlsb),*.xls;*.xlsx;*.xlsm;*.xlsb", Title:="Dosya Seçin")
+If dosya = False Then
+Exit Sub
+End If
+
+Application.ScreenUpdating = False
+Set k2 = Workbooks.Open(dosya)
+
+For i = 1 To k2.Sheets.Count
+sonsatir = Cells(Rows.Count, "b").End(xlUp).Row + 1
+sekmeismi = k2.Sheets(i).Name
+Set s2 = k2.Sheets(sekmeismi)
+
+sonsatir2 = s2.Cells(Rows.Count, "a").End(xlUp).Row
+sonsutun = s2.Cells(2, Columns.Count).End(xlToLeft).Column
+
+If sonsatir2 = 0 Then
+MsgBox "Sayfa'da veri yok", vbCritical
+Exit Sub
+Else
+s2.Range(("B4"), s2.Cells(sonsatir2 - 2, sonsutun)).Copy s1.Cells(sonsatir, 2)
+s2.Cells(1, 1).Copy
+s1.Cells(sonsatir + 1, 1).PasteSpecial Paste:=xlPasteValues
+
+End If
+
+
+Next i
+MsgBox "Aktarım tamamdır.", vbInformation
+
+'With UserForm1.ListBox1
+'For i = 1 To k2.Sheets.Count
+'.AddItem k2.Sheets(i).Name
+'Next i
+'End With
+'UserForm1.Show
+
+'sekmeismi = UserForm1.ListBox1.Value
+
+'Set s2 = k2.Sheets(sekmeismi)
+
+
+'sonsatir2 = s2.Cells(Rows.Count, "a").End(xlUp).Row
+'sonsutun = s2.Cells(2, Columns.Count).End(xlToLeft).Column
+
+'If sonsatir2 = 0 Then
+'MsgBox "Sayfa'da veri yok", vbCritical
+'Exit Sub
+'Else
+'s2.Range(("B3"), s2.Cells(sonsatir2, sonsutun)).Copy s1.Cells(sonsatir, 2)
+'s2.Cells(1, 1).Copy
+'s1.Cells(sonsatir + 1, 1).PasteSpecial Paste:=xlPasteValues
+'MsgBox "Aktarım tamamdır.", vbInformation
+
+'End If
+k2.Close
+Set s2 = Nothing
+Set k2 = Nothing
+Set s2 = Nothing
+Set s1 = Nothing
+Set k1 = Nothing
+
+Application.ScreenUpdating = True
+
+End Sub
